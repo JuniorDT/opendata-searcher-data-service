@@ -11,25 +11,25 @@ import (
 )
 
 type commonTestResultRouter struct {
-	CSVParseResultService commontestresults.CSVParseResultService
+	FileParseResultService commontestresults.FileParseResultService
 }
 
-func NewTestResultRouter(r commontestresults.CSVParseResultService, router *mux.Router) *mux.Router {
-	CommonTestResultRouter := commonTestResultRouter{CSVParseResultService: r}
+func NewTestResultRouter(r commontestresults.FileParseResultService, router *mux.Router) *mux.Router {
+	CommonTestResultRouter := commonTestResultRouter{FileParseResultService: r}
 
-	router.HandleFunc("/parse_result/", CommonTestResultRouter.createCSVParseResultHandler).Methods("PUT")
-	router.HandleFunc("/parse_result/{id}", CommonTestResultRouter.getCSVParseResultHandler).Methods("GET")
+	router.HandleFunc("/parse_result/", CommonTestResultRouter.createFileParseResultHandler).Methods("PUT")
+	router.HandleFunc("/parse_result/{id}", CommonTestResultRouter.getFileParseResultHandler).Methods("GET")
 	return router
 }
 
-func(trr *commonTestResultRouter) createCSVParseResultHandler(w http.ResponseWriter, r *http.Request) {
-	result, err := decodeCSVParseResult(r)
+func(trr *commonTestResultRouter) createFileParseResultHandler(w http.ResponseWriter, r *http.Request) {
+	result, err := decodeFileParseResult(r)
 	if err != nil {
 		fmt.Println(err)
 		Error(w, http.StatusBadRequest, "Invalid request payload")
 		return
 	}
-	err = trr.CSVParseResultService.Create(&result)
+	err = trr.FileParseResultService.Create(&result)
 	if err != nil {
 		fmt.Println(err)
 		Error(w, http.StatusInternalServerError, err.Error())
@@ -38,12 +38,12 @@ func(trr *commonTestResultRouter) createCSVParseResultHandler(w http.ResponseWri
 	Json(w, http.StatusOK, err)
 }
 
-func(trr *commonTestResultRouter) getCSVParseResultHandler(w http.ResponseWriter, r *http.Request)  {
+func(trr *commonTestResultRouter) getFileParseResultHandler(w http.ResponseWriter, r *http.Request)  {
 	vars := mux.Vars(r)
 	log.Println(vars)
 	id := vars["id"]
 
-	result, err := trr.CSVParseResultService.GetById(id)
+	result, err := trr.FileParseResultService.GetById(id)
 	if err != nil {
 		Error(w, http.StatusNotFound, err.Error())
 		return
@@ -52,7 +52,7 @@ func(trr *commonTestResultRouter) getCSVParseResultHandler(w http.ResponseWriter
 	Json(w, http.StatusOK, result)
 }
 
-func decodeCSVParseResult(rr *http.Request) (r commontestresults.CSVParseResult, err error) {
+func decodeFileParseResult(rr *http.Request) (r commontestresults.FileParseResult, err error) {
 
 	if rr.Body == nil {
 		return r, errors.New("no request body")

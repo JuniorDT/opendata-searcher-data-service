@@ -5,23 +5,24 @@ import (
 	"gopkg.in/mgo.v2"
 )
 
-type CSVParseResultService struct {
+type FileParseResultService struct {
 	collection *mgo.Collection
 }
 
-func NewTestResultService(session *Session, dbName string, collectionName string) *CSVParseResultService {
+// get collection, add index
+func NewTestResultService(session *Session, dbName string, collectionName string) *FileParseResultService {
 	collection := session.GetCollection(dbName, collectionName)
-	collection.EnsureIndex(CSVParseResultIndex())
-	return &CSVParseResultService {collection}
+	collection.EnsureIndex(FileParseResultIndex())
+	return &FileParseResultService {collection}
 }
 
-func(r *CSVParseResultService) Create(t *commontestresults.CSVParseResult) error {
-	testResult := newCSVParseResultModel(t)
+func(r *FileParseResultService) Create(t *commontestresults.FileParseResult) error {
+	testResult := newFileParseResultModel(t)
 	return r.collection.Insert(&testResult)
 }
 
-func(r *CSVParseResultService) GetById(id string) (*commontestresults.CSVParseResult, error) {
-	resultModel := CSVParseResultModel{}
+func(r *FileParseResultService) GetById(id string) (*commontestresults.FileParseResult, error) {
+	resultModel := FileParseResultModel{}
 	err := r.collection.FindId(id).One(&resultModel)
-	return resultModel.toDefaultStructure(), err
+	return resultModel.toFileParseResult(), err
 }

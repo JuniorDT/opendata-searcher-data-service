@@ -6,18 +6,20 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-// this structure of result of test parse CSV for insert in Mongodb
-type CSVParseResultModel struct {
+// this structure of result of test parse file for insert in Mongodb
+type FileParseResultModel struct {
 	ID      	bson.ObjectId  	`bson:"_id,omitempty" json:"id"`
-	Title   	string      	`bson:"title" json:"title"`
-	URL     	string      	`bson:"url" json:"url"`
-	Size    	float64     	`bson:"size" json:"size,string"`
-	Time    	int32	    	`bson:"time" json:"time,string"`
-	ParseMethod string  		`bson:"parse_method" json:"parse_method"`
+	Title   	string      	`bson:"title,omitempty" json:"title"`
+	Filename 	string			`bson:"filename" json:"filename"`
+	URL     	string      	`bson:"url,omitempty" json:"url"`				// url for source file
+	Size    	float64     	`bson:"size" json:"size,string"`				// size (KB)
+	ParseTime   int32	    	`bson:"parse_time" json:"parse_time,string"`	// parsing time (sec)
+	Expansion	string			`bson:"expansion" json:"expansion,string"`	// file expansion
+	ParseMethod string  		`bson:"parse_method" json:"parse_method"`		// method for parse
 }
 
 // index for searching by URL in Mongodb
-func CSVParseResultIndex() mgo.Index {
+func FileParseResultIndex() mgo.Index {
 	return mgo.Index{
 		Key: 		[]string{"url"},
 		Unique: 	true,
@@ -27,25 +29,29 @@ func CSVParseResultIndex() mgo.Index {
 	}
 }
 
-// convert CSV parse result from CSVParseResult to CSVParseResultModel
-func newCSVParseResultModel(r *commontestresults.CSVParseResult) *CSVParseResultModel {
-	return &CSVParseResultModel{
-		Title: 		 r.Title,
-		URL: 		 r.URL,
-		Size: 		 r.Size,
-		Time: 		 r.Time,
-		ParseMethod: r.ParseMethod,
+// convert file test parse result from FileParseResult to FileParseResultModel
+func newFileParseResultModel(r *commontestresults.FileParseResult) *FileParseResultModel {
+	return &FileParseResultModel{
+		Title: 		 	r.Title,
+		Filename:	 	r.Filename,
+		URL: 		 	r.URL,
+		Size: 		 	r.Size,
+		ParseTime:		r.ParseTime,
+		Expansion:		r.Expansion,
+		ParseMethod: 	r.ParseMethod,
 	}
 }
 
-// convert from CSVParseResultModel to CSVParseResult
-func(r *CSVParseResultModel) toDefaultStructure() *commontestresults.CSVParseResult {
-	return &commontestresults.CSVParseResult{
-		ID: 		 r.ID.Hex(),
-		Title: 		 r.Title,
-		URL: 		 r.URL,
-		Size: 		 r.Size,
-		Time: 		 r.Time,
-		ParseMethod: r.ParseMethod,
+// convert from FileParseResultModel to FileParseResult
+func(r *FileParseResultModel) toFileParseResult() *commontestresults.FileParseResult {
+	return &commontestresults.FileParseResult{
+		ID: 		 	r.ID.Hex(),
+		Title: 		 	r.Title,
+		Filename:	 	r.Filename,
+		URL: 		 	r.URL,
+		Size: 		 	r.Size,
+		ParseTime:		r.ParseTime,
+		Expansion:		r.Expansion,
+		ParseMethod: 	r.ParseMethod,
 	}
 }

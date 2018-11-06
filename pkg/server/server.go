@@ -17,7 +17,7 @@ type Server struct {
 	router *mux.Router
 }
 
-func NewServer(u commontestresults.CSVParseResultService) *Server {
+func NewServer(u commontestresults.FileParseResultService) *Server {
 	s := Server{router: mux.NewRouter()}
 	server.NewTestResultRouter(u, s.newSubRouter("/test_results"))
 	// check routers
