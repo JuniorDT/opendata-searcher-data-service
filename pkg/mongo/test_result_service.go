@@ -3,6 +3,7 @@ package mongo
 import (
 	"github.com/JuniorDT/opendata-searcher-data-service/pkg/tests/common_service"
 	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
 )
 
 type FileParseResultService struct {
@@ -23,6 +24,6 @@ func(r *FileParseResultService) Create(t *commontestresults.FileParseResult) err
 
 func(r *FileParseResultService) GetById(id string) (*commontestresults.FileParseResult, error) {
 	resultModel := FileParseResultModel{}
-	err := r.collection.FindId(id).One(&resultModel)
+	err := r.collection.FindId(bson.ObjectIdHex(id)).One(&resultModel)
 	return resultModel.toFileParseResult(), err
 }
