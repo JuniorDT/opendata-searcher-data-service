@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/JuniorDT/opendata-searcher-data-service/pkg/tests/common_service"
+	"github.com/JuniorDT/opendata-searcher-data-service/pkg/services_test_results/common_service"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
@@ -19,6 +19,7 @@ func NewTestResultRouter(r commontestresults.FileParseResultService, router *mux
 
 	router.HandleFunc("/parse_result/", CommonTestResultRouter.createFileParseResultHandler).Methods("PUT")
 	router.HandleFunc("/parse_result/{id}", CommonTestResultRouter.getFileParseResultHandler).Methods("GET")
+	router.HandleFunc("/parse_result/{id}", CommonTestResultRouter.deleteFileParseResultHandler).Methods("DELETE")
 	return router
 }
 
@@ -50,6 +51,20 @@ func(trr *commonTestResultRouter) getFileParseResultHandler(w http.ResponseWrite
 	}
 
 	Json(w, http.StatusOK, result)
+}
+
+func(trr *commonTestResultRouter) deleteFileParseResultHandler(w http.ResponseWriter, r *http.Request)  {
+	vars := mux.Vars(r)
+	log.Println(vars)
+	id := vars["id"]
+
+	err := trr.FileParseResultService.DeleteById(id)
+	if err != nil {
+		Error(w, http.StatusNotFound, err.Error())
+		return
+	}
+
+	Json(w, http.StatusOK, err)
 }
 
 func decodeFileParseResult(rr *http.Request) (r commontestresults.FileParseResult, err error) {

@@ -4,7 +4,7 @@ package server
 import (
 	"fmt"
 	"github.com/JuniorDT/opendata-searcher-data-service/pkg/server/routers"
-	"github.com/JuniorDT/opendata-searcher-data-service/pkg/tests/common_service"
+	"github.com/JuniorDT/opendata-searcher-data-service/pkg/services_test_results/common_service"
 	"log"
 	"net/http"
 	"os"

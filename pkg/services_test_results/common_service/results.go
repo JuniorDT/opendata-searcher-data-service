@@ -14,5 +14,6 @@ type FileParseResult struct {
 type FileParseResultService interface {
 	Create(r *FileParseResult) error
 	GetById(id string) (r *FileParseResult, err error)
+	DeleteById(id string) error
 }
 

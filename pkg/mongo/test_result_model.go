@@ -1,7 +1,7 @@
 package mongo
 
 import (
-	"github.com/JuniorDT/opendata-searcher-data-service/pkg/tests/common_service"
+	"github.com/JuniorDT/opendata-searcher-data-service/pkg/services_test_results/common_service"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )

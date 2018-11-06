@@ -1,7 +1,7 @@
 package mongo
 
 import (
-	"github.com/JuniorDT/opendata-searcher-data-service/pkg/tests/common_service"
+	"github.com/JuniorDT/opendata-searcher-data-service/pkg/services_test_results/common_service"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -26,4 +26,9 @@ func(r *FileParseResultService) GetById(id string) (*commontestresults.FileParse
 	resultModel := FileParseResultModel{}
 	err := r.collection.FindId(bson.ObjectIdHex(id)).One(&resultModel)
 	return resultModel.toFileParseResult(), err
+}
+
+func(r *FileParseResultService) DeleteById(id string) error {
+	err := r.collection.RemoveId(bson.ObjectIdHex(id))
+	return err
 }
